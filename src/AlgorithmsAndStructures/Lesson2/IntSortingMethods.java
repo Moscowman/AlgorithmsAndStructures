@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class IntSortingMethods {
     public static void main(String[] args) {
-        int[] array = new int[100_000];
+        int[] array = new int[10_000];
         Random random = new Random();
 
         for(int i = 0; i < array.length; ++i) {
@@ -89,15 +89,14 @@ public class IntSortingMethods {
     }
 
     private static void insertionSort(int[] array) {
-        for(int i = 1; i < array.length; ++i) {
+        for (int i = 1; i < array.length; i++) {
             int temp = array[i];
-
-            int index;
-            for(index = i; index > 0 && array[index - 1] >= temp; --index) {
-                array[index] = array[index - 1];
+            int in = i;
+            while (in > 0 && array[in - 1] >= temp) {
+                array[in] = array[in - 1];
+                in--;
             }
-
-            array[index] = temp;
+            array[in] = temp;
         }
 
     }
