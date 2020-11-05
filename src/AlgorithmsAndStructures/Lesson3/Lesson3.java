@@ -33,6 +33,21 @@ public class Lesson3 {
         }
 
         reverseInput();
+
+        Deque deque = new DequeImpl(10);
+        deque.insertLeft(1);
+        deque.insertRight(2);
+        deque.insertLeft(3);
+        deque.insertRight(4);
+        deque.insertLeft(5);
+        deque.insertRight(6);
+        System.out.println(deque.removeLeft());
+        System.out.println(deque.removeLeft());
+        System.out.println(deque.removeLeft());
+        System.out.println(deque.removeRight());
+        System.out.println(deque.removeRight());
+        System.out.println(deque.removeRight());
+
     }
 
     private static void reverseInput () {
@@ -55,5 +70,6 @@ public class Lesson3 {
             System.out.print(stack.pop());
         }
         System.out.println();
+
     }
 }

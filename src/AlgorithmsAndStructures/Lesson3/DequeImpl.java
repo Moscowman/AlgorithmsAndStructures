@@ -18,7 +18,7 @@ public class DequeImpl<E> implements Deque<E> {
     }
 
     @Override
-    public boolean insert(E value) {
+    public boolean insertLeft(E value) {
         if (isFull()) {
             return false;
         }
@@ -32,8 +32,38 @@ public class DequeImpl<E> implements Deque<E> {
         return true;
     }
 
+    @Override
+    public boolean insertRight(E value) {
+        if (isFull()) {
+            return false;
+        }
+        head--;
+        if (head < DEFAULT_HEAD) {
+            head = data.length - 1;
+        }
+
+        data[head] = value;
+        size++;
+        return true;
+    }
+
+    @Override
+    public E removeLeft() {
+        if (isEmpty()) {
+            return null;
+        }
+
+        if (tail == DEFAULT_TAIL) {
+            tail = data.length - 1;
+        }
+
+        E removedValue = data[tail--];
+        size--;
+        return removedValue;
+    }
+
     @Override // O(1)
-    public E remove() {
+    public E removeRight() {
         if (isEmpty()) {
             return null;
         }
@@ -48,9 +78,12 @@ public class DequeImpl<E> implements Deque<E> {
     }
 
     @Override
-    public E peekHead() {
+    public E peekLeft() {
         return data[head];
     }
+
+    @Override
+    public E peekRight() {return data[tail];}
 
     @Override
     public int size() {

@@ -2,11 +2,17 @@ package AlgorithmsAndStructures.Lesson3;
 
 public interface Deque<E> {
 
-    boolean insert(E value);
+    boolean insertLeft(E value);
 
-    E remove();
+    boolean insertRight(E value);
 
-    E peekHead();
+    E removeLeft();
+
+    E removeRight();
+
+    E peekLeft();
+
+    E peekRight();
 
     int size();
 
