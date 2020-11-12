@@ -5,51 +5,65 @@ import java.util.*;
 public class Rucksack {
 
     int w;
-    private Item[] currentItems;
-    private ArrayList<ArrayList<Item>> items;
+    private ArrayList<Item> bestItems;
+    private ArrayList<Item> currentItems;
+    private ArrayList<Item> items;
+    int currentValue;
+    int currentWeight;
+    int bestValue;
 
     public Rucksack(int w, Item[] items) {
         this.w = w;
-        this.items = new ArrayList<>();
-        this.currentItems = Arrays.copyOf(items, items.length);
+        this.items = new ArrayList<>(Arrays.asList(items));
+        bestItems = new ArrayList<>();
+        currentItems = new ArrayList<>();
     }
 
     public static void main(String[] args) {
-        Rucksack rucksackApp = new Rucksack(100,
+        Rucksack rucksackApp = new Rucksack(10,
                 new Item[]{new Item(1, 100),
-                new Item(6, 4),
-                new Item(9, 9)});
-        ArrayList<ArrayList<Item>> items = rucksackApp.getRucksack();
+                        new Item(6, 4),
+                        new Item(9, 9),
+                        new Item(3, 20)});
+        ArrayList<Item> items = rucksackApp.getRucksack();
         System.out.println(items.size());
-        for (ArrayList<Item> item : items) {
-            System.out.println(item);
+        for (Item item : items) {
+            System.out.println(item.getWeight() + " " + item.getPrice());
         }
     }
 
-    private ArrayList<ArrayList<Item>> getRucksack() {
-        items.clear();
-        processRucksack(currentItems.length);
-        return items;
+    private ArrayList<Item> getRucksack() {
+        bestItems.clear();
+        currentItems.clear();
+        currentValue = 0;
+        bestValue = 0;
+        currentWeight = 0;
+        processRucksack(0);
+        return bestItems;
     }
 
-    private void processRucksack(int length) {
-        if (length == 1) {
+    private void processRucksack(int position) {
+        if (position >= items.size()) {
             return;
         }
-
-        for (int i = 0; i < length; i++) {
-            processRucksack(length - 1);
-            items.add(new ArrayList<>(Arrays.asList(currentItems)));
-            rotate(length);
+        processRucksack(position + 1);
+        Item currentItem = items.get(position);
+        int currentItemPrice = currentItem.getPrice();
+        int currentItemWeight = currentItem.getWeight();
+        if (currentItemWeight + currentWeight > w) {
+            return;
         }
-    }
-
-    private void rotate(int length) {
-        int pos = items.size() - length;
-        Item temp = currentItems[pos];
-        for (int i = pos + 1; i < currentItems.length; i++) {
-            currentItems[i - 1] = currentItems[i];
+        currentItems.add(currentItem);
+        currentValue += currentItemPrice;
+        currentWeight += currentItemWeight;
+        if (currentValue > bestValue) {
+            bestItems = new ArrayList<>(currentItems);
+            bestValue = currentValue;
         }
-        currentItems[currentItems.length - 1] = temp;
+        processRucksack(position + 1);
+        currentValue -= currentItemPrice;
+        currentWeight -= currentItemWeight;
+        currentItems.remove(currentItems.size() - 1);
+
     }
 }
