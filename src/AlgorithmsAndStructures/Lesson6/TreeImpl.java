@@ -7,6 +7,11 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
 
     private Node<E> root;
     private int size;
+    private int MAX_DEPTH;
+
+    public TreeImpl(int MAX_DEPTH) {
+        this.MAX_DEPTH = MAX_DEPTH;
+    }
 
     @Override
     public boolean add(E value) {
@@ -25,7 +30,7 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
         }
 
         Node<E> parent = nodeAndParent.parent;
-        if (parent != null) {
+        if (parent != null && parent.getDepth() < MAX_DEPTH - 1) {
             parent.addChild(newNode);
             size++;
             return true;
@@ -136,6 +141,22 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public boolean isBalanced() {
+        return isBalancedRecursive(root);
+    }
+
+    private boolean isBalancedRecursive(Node node) {
+        return (node == null) ||
+                isBalancedRecursive(node.getLeftChild()) &&
+                        isBalancedRecursive(node.getRightChild()) &&
+                        Math.abs(height(node.getLeftChild()) - height(node.getRightChild())) <= 1;
+    }
+
+    private static int height(Node node) {
+        return node == null ? 0 : 1 + Math.max(height(node.getLeftChild()), height(node.getRightChild()));
     }
 
     @Override
