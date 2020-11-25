@@ -1,5 +1,7 @@
 package AlgorithmsAndStructures.Lesson8;
 
+import java.util.ArrayList;
+
 public class HashTableImpl<K, V> implements HashTable<K, V> {
 
     private final int maxSize;
@@ -39,13 +41,16 @@ public class HashTableImpl<K, V> implements HashTable<K, V> {
     }
 
 
-    private final Node<K, V>[] data;
+    private final ArrayList<Node>[] data;
     private int size;
 
     @SuppressWarnings("unchecked")
     public HashTableImpl(int maxSize) {
         this.maxSize = maxSize;
-        this.data = new Node[this.maxSize * 2];
+        this.data = new ArrayList[this.maxSize * 2];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = new ArrayList<>();
+        }
     }
 
     @Override
@@ -56,17 +61,7 @@ public class HashTableImpl<K, V> implements HashTable<K, V> {
             return false;
         }
 
-        while(data[index] != null) {
-            if (data[index].key.equals(key)) {
-                data[index].setValue(value);
-                return true;
-            }
-
-            index = index + getStep(key);
-            index %= data.length;
-        }
-
-        data[index] = new Node<>(key, value);
+        data[index].add(new Node<>(key, value));
         size++;
         return false;
     }
@@ -81,33 +76,31 @@ public class HashTableImpl<K, V> implements HashTable<K, V> {
 
     @Override
     public V get(K key) {
-        int index = indexOf(key);
-        return index == -1 ? null : data[index].getValue();
+        int[] index = indexOf(key);
+        return index[0] == -1 ? null : (V) data[index[0]].get(index[1]).getValue();
     }
 
-    private int indexOf(K key) {
+    private int[] indexOf(K key) {
         int index = hash(key);
-        while (data[index] != null) {
-            Node<K, V> node = data[index];
+        for (int i = 0; i < data[index].size(); i++) {
+            Node node = data[index].get(i);
             if (node.getKey().equals(key)) {
-                return index;
+                return new int[] {index, i};
             }
-            index = index + getStep(key);
-            index %= data.length;
         }
 
-        return -1;
+        return new int[] {-1};
     }
 
     @Override
     public V remove(K key) {
-        int index = indexOf(key);
-        if (index == -1) {
+        int[] index = indexOf(key);
+        if (index[0] == -1) {
             return null;
         }
 
-        Node<K, V> node = data[index];
-        data[index] = null;
+        Node<K, V> node = data[index[0]].get(index[1]);
+        data[index[0]].remove(index[1]);
         size--;
         return node.getValue();
     }
