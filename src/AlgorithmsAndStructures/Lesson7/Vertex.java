@@ -1,4 +1,4 @@
-package ru.geekbrains.ads.lesson7;
+package AlgorithmsAndStructures.Lesson7;
 
 import java.util.Objects;
 
